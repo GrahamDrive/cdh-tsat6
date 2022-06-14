@@ -50,11 +50,7 @@ SPI_HandleTypeDef hspi3;
 
 osThreadId defaultTaskHandle;
 /* USER CODE BEGIN PV */
-CAN_TxHeaderTypeDef TxMessage;
-CAN_RxHeaderTypeDef RxMessage;
 uint8_t               TxData[8];
-uint8_t               RxData[8];
-uint32_t              TxMailbox;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -110,7 +106,14 @@ int main(void)
   MX_SPI3_Init();
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
-
+  // Temporary Message
+  TxData[0] = 0x4;
+  TxData[1] = 0x2;
+  TxData[2] = 0x0;
+  for(int i = 3; i < 7; ++i){
+	  TxData[i] = 0x0;
+  }
+  CAN_transmit_message(&hcan1,TxData);
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -239,7 +242,7 @@ static void MX_CAN1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN CAN1_Init 2 */
-  boot_CAN()
+  boot_CAN(&hcan1);
   /* USER CODE END CAN1_Init 2 */
 
 }
@@ -448,7 +451,17 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+/**
+  * @brief  Rx Fifo 0 message pending callback
+  * @param  hcan: pointer to a CAN_HandleTypeDef structure that contains
+  *         the configuration information for the specified CAN.
+  * @retval None
+  */
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
+{
+  // Handling Function
+  CAN_MESSAGE_RECEIVED(hcan1);
+}
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartDefaultTask */

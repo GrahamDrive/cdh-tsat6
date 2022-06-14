@@ -21,29 +21,51 @@
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include <stdio.h>
 
-#include "Core/Inc/can.h"
+#include "can.h"
 
-int boot_CAN(){
 
-  // Turn on CANBus
-  if (HAL_CAN_Start(&hcan1) != HAL_OK)
-  {
-    /* Start Error */
-    Error_Handler();
-  }
+CAN_TxHeaderTypeDef TxMessage;
+CAN_RxHeaderTypeDef RxMessage;
+uint32_t            TxMailbox;
+uint8_t             RxData[8];
 
-  // Turn on interrupts
-  if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)
-  {
-    /* Notification Error */
-    Error_Handler();
-  }
+/**
+ * @brief Boots the CAN Bus
+ * 
+ * @return HAL_StatusTypeDef 
+ */
+void boot_CAN(CAN_HandleTypeDef *hcan1){
 
-  // TX Message Parameters
-  TxMessage.StdId = 0x1;
-  TxMessage.IDE = CAN_ID_STD;
-  TxMessage.RTR = CAN_RTR_DATA;
-  TXMessage.DLC = 8;
+	// Turn on CANBus
+	HAL_CAN_Start(hcan1);
+
+	// Turn on interrupts
+	HAL_CAN_ActivateNotification(hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
+
+
+	// TX Message Parameters
+	TxMessage.StdId = 0x1;
+	TxMessage.IDE = CAN_ID_STD;
+	TxMessage.RTR = CAN_RTR_DATA;
+	TxMessage.DLC = 8;
+}
+
+
+/**
+ * @brief Used to send messages over CAN
+ * @param hcan1 The CANBUS object to send the message over\
+ * @param message A 8 byte message
+ */
+void CAN_transmit_message(CAN_HandleTypeDef *hcan1, uint8_t message[])
+{
+  printf("sent");
+  HAL_CAN_AddTxMessage(hcan1,&TxMessage,message,&TxMailbox);
+}
+
+void CAN_MESSAGE_RECEIVED(CAN_HandleTypeDef *hcan1){
+	/* Get RX message */
+	  HAL_CAN_GetRxMessage(hcan1,CAN_RX_FIFO0,&RxMessage,RxData);
+	  return;
 }
 
 
