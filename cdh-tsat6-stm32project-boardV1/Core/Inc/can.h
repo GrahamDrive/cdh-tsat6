@@ -10,8 +10,7 @@
 //  Github: https://github.com/UMSATS/cdh-tsat6
 //
 // File Description:
-//  Functions for CAN initialization, message reception, and message transmission. Received messages are read into a Queue, which
-//  can be handled by a dedicated task.
+//  Functions for CAN initialization, message reception, and message transmission.
 //
 // History
 // 2022-05-25 by Graham Driver
@@ -26,40 +25,22 @@
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 // DEFINITIONS AND MACROS
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
-#define MAX_CAN_DATA_LENGTH 8
-
-// Previously had a macro to check if can was ready...
-// #define CAN_TRANSMIT_READY()
-
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------
-// STRUCTS AND STRUCT TYPEDEFS
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------
-typedef struct
-{
-    uint32_t id;                         // Message ID.
-    uint8_t  extended;                   // 1 if extended, 0 otherwise.
-    uint8_t  dlc;                        // Data length code (i.e. number of bytes).
-    uint8_t  data[MAX_CAN_DATA_LENGTH];  // Array containing the data bytes (up to 8).
-} CANMessage_t;
-
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------
-// GLOBALS
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+#define MAX_CAN_DATA_LENGTH 8 // Maximum bytes in one CAN frame
+#define ID 0x1 // The ID number of the device
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 // FUNCTION PROTOTYPES
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-void boot_CAN(CAN_HandleTypeDef *hcan1); // Initializes and Starts the CAN
+HAL_StatusTypeDef boot_CAN(CAN_HandleTypeDef *hcan1); // Initializes and Starts the CAN
 
 
-void CAN_transmit_message(
-		CAN_HandleTypeDef *hcan1,
+HAL_StatusTypeDef CAN_transmit_message(
+		CAN_HandleTypeDef *hcan1, // CAN object
 		uint8_t message[]   // Pointer to the CAN message
 );
 
 
-void CAN_MESSAGE_RECEIVED(CAN_HandleTypeDef *hcan1);    // Interrupt handler for CAN BUS
+HAL_StatusTypeDef CAN_MESSAGE_RECEIVED(CAN_HandleTypeDef *hcan1);    // Interrupt handler for CAN BUS
 #endif /* INCLUDE_CAN_H_ */

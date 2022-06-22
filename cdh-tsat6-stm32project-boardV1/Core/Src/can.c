@@ -28,26 +28,31 @@ CAN_TxHeaderTypeDef TxMessage;
 CAN_RxHeaderTypeDef RxMessage;
 uint32_t            TxMailbox;
 uint8_t             RxData[8];
+HAL_StatusTypeDef 	returnCode;
 
 /**
  * @brief Boots the CAN Bus
  * 
  * @return HAL_StatusTypeDef 
  */
-void boot_CAN(CAN_HandleTypeDef *hcan1){
+HAL_StatusTypeDef boot_CAN(CAN_HandleTypeDef *hcan1){
 
-	// Turn on CANBus
-	HAL_CAN_Start(hcan1);
+	returnCode = HAL_CAN_Start(hcan1); // Turn on CANBus
+	if(returnCode != HAL_OK){
+		return returnCode;
+	}
 
-	// Turn on interrupts
-	HAL_CAN_ActivateNotification(hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
-
+	returnCode = HAL_CAN_ActivateNotification(hcan1, CAN_IT_RX_FIFO0_MSG_PENDING); // Turn on interrupts
+	if(returnCode != HAL_OK){
+		return returnCode;
+	}
 
 	// TX Message Parameters
-	TxMessage.StdId = 0x1;
+	TxMessage.StdId = ID;
 	TxMessage.IDE = CAN_ID_STD;
 	TxMessage.RTR = CAN_RTR_DATA;
-	TxMessage.DLC = 8;
+	TxMessage.DLC = MAX_CAN_DATA_LENGTH;
+	return HAL_OK;
 }
 
 
@@ -58,7 +63,6 @@ void boot_CAN(CAN_HandleTypeDef *hcan1){
  */
 void CAN_transmit_message(CAN_HandleTypeDef *hcan1, uint8_t message[])
 {
-  printf("sent");
   HAL_CAN_AddTxMessage(hcan1,&TxMessage,message,&TxMailbox);
 }
 
