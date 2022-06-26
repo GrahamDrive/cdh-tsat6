@@ -35,24 +35,17 @@ HAL_StatusTypeDef 	returnCode;
  * 
  * @return HAL_StatusTypeDef 
  */
-HAL_StatusTypeDef boot_CAN(CAN_HandleTypeDef *hcan1){
+void boot_CAN(CAN_HandleTypeDef *hcan1){
 
-	returnCode = HAL_CAN_Start(hcan1); // Turn on CANBus
-	if(returnCode != HAL_OK){
-		return returnCode;
-	}
+	HAL_CAN_Start(hcan1); // Turn on CANBus
 
-	returnCode = HAL_CAN_ActivateNotification(hcan1, CAN_IT_RX_FIFO0_MSG_PENDING); // Turn on interrupts
-	if(returnCode != HAL_OK){
-		return returnCode;
-	}
+	HAL_CAN_ActivateNotification(hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
 
 	// TX Message Parameters
 	TxMessage.StdId = ID;
 	TxMessage.IDE = CAN_ID_STD;
 	TxMessage.RTR = CAN_RTR_DATA;
 	TxMessage.DLC = MAX_CAN_DATA_LENGTH;
-	return HAL_OK;
 }
 
 

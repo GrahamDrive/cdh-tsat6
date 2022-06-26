@@ -106,14 +106,14 @@ int main(void)
   MX_SPI3_Init();
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
-  // Temporary Message
-  TxData[0] = 0x4;
-  TxData[1] = 0x2;
-  TxData[2] = 0x0;
-  for(int i = 3; i < 7; ++i){
-	  TxData[i] = 0x0;
-  }
-  CAN_transmit_message(&hcan1,TxData);
+  	  	TxData[0] = 0x4;
+  	    TxData[1] = 0x2;
+  	    TxData[2] = 0x0;
+  	    TxData[3] = 0x0;
+  	    TxData[4] = 0x0;
+  	    TxData[5] = 0x0;
+  	    TxData[6] = 0x2;
+  	    TxData[7] = 0x4;
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -149,6 +149,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	CAN_transmit_message(&hcan1,TxData);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
