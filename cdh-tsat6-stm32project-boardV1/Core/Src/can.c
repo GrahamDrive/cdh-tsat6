@@ -39,7 +39,7 @@ void boot_CAN(CAN_HandleTypeDef *hcan1){
 
 	HAL_CAN_Start(hcan1); // Turn on CANBus
 
-	HAL_CAN_ActivateNotification(hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
+	HAL_CAN_ActivateNotification(hcan1, CAN_IT_RX_FIFO0_MSG_PENDING );
 
 	// TX Message Parameters
 	TxMessage.StdId = ID;
@@ -61,7 +61,9 @@ void CAN_transmit_message(CAN_HandleTypeDef *hcan1, uint8_t message[])
 
 void CAN_MESSAGE_RECEIVED(CAN_HandleTypeDef *hcan1){
 	/* Get RX message */
-	  HAL_CAN_GetRxMessage(hcan1,CAN_RX_FIFO0,&RxMessage,RxData);
+	uint8_t testResponse[8] = {8,7,6,5,4,3,2,1};
+	HAL_Delay(100);
+	CAN_transmit_message(hcan1, testResponse);
 	  return;
 }
 

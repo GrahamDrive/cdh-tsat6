@@ -92,24 +92,27 @@ int main(void)
   MX_USART2_UART_Init();
   MX_CAN1_Init();
   /* USER CODE BEGIN 2 */
-  TxData[0] = 0x4;
-  TxData[1] = 0x2;
-  TxData[2] = 0x0;
-  TxData[3] = 0x0;
-  TxData[4] = 0x0;
-  TxData[5] = 0x0;
-  TxData[6] = 0x2;
-  TxData[7] = 0x4;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	HAL_Delay(500);
-	CAN_transmit_message(&hcan1, TxData);
+	  struct message Mymessage;
+	  Mymessage.SourceID = 0x1;
+	  Mymessage.DestinationID = 0x3;
+	  Mymessage.priority = 0x0E;
+	  Mymessage.message[0] = 0x0;
+	  Mymessage.message[1] = 0x1;
+	  Mymessage.message[2] = 0x0;
+	  Mymessage.message[3] = 0x1;
+	  Mymessage.message[4] = 0x0;
+	  Mymessage.message[5] = 0x1;
+	  Mymessage.message[6] = 0x0;
+	  Mymessage.message[7] = 0x1;
+	  CAN_transmit_message(&hcan1, Mymessage);
+	  HAL_Delay(500);
     /* USER CODE END WHILE */
-
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -270,16 +273,9 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-/**
-  * @brief  Rx Fifo 0 message pending callback
-  * @param  hcan: pointer to a CAN_HandleTypeDef structure that contains
-  *         the configuration information for the specified CAN.
-  * @retval None
-  */
-void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
-  // Handling Function
-  CAN_MESSAGE_RECEIVED(hcan1);
+	CAN_MESSAGE_RECEIVED(hcan);
 }
 /* USER CODE END 4 */
 

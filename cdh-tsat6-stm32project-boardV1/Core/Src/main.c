@@ -149,7 +149,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	CAN_transmit_message(&hcan1,TxData);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -458,7 +457,7 @@ static void MX_GPIO_Init(void)
   *         the configuration information for the specified CAN.
   * @retval None
   */
-void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
+void HAL_CAN_RxFIFO0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
 {
   // Handling Function
   CAN_MESSAGE_RECEIVED(hcan1);
