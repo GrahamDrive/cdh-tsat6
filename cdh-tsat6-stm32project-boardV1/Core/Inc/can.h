@@ -25,9 +25,17 @@
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 // DEFINITIONS AND MACROS
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
-#define MAX_CAN_DATA_LENGTH 8 // Maximum bytes in one CAN frame
-#define ID 0x1 // The ID number of the device
 
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+// STRUCTS
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+struct message{
+	uint8_t priority; // Priority of the message MAX VALUE: 0x1F
+	uint8_t DestinationID; // The ID number of the destination device MAX VALUE: 0x3
+	uint8_t command;	// The command value
+	uint8_t argument;	// Can either be a seventh message byte or a command argument
+	uint8_t data[6];	// Message
+};
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 // FUNCTION PROTOTYPES
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -38,7 +46,7 @@ void boot_CAN(CAN_HandleTypeDef *hcan1); // Initializes and Starts the CAN
 
 void CAN_transmit_message(
 		CAN_HandleTypeDef *hcan1, // CAN object
-		uint8_t message[]   // Pointer to the CAN message
+		struct message myMessage
 );
 
 

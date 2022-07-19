@@ -31,9 +31,10 @@
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 struct message{
 	uint8_t priority; // Priority of the message MAX VALUE: 0x1F
-	uint8_t SourceID; // The ID number of the device MAX VALUE: 0x3
 	uint8_t DestinationID; // The ID number of the destination device MAX VALUE: 0x3
-	uint8_t message[8];
+	uint8_t command;	// The command value
+	uint8_t argument;	// Can either be a seventh message byte or a command argument
+	uint8_t data[6];	// Message
 };
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 // FUNCTION PROTOTYPES

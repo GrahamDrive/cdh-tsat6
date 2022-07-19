@@ -98,18 +98,13 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  struct message Mymessage;
-	  Mymessage.SourceID = 0x1;
-	  Mymessage.DestinationID = 0x3;
-	  Mymessage.priority = 0x0E;
-	  Mymessage.message[0] = 0x0;
-	  Mymessage.message[1] = 0x1;
-	  Mymessage.message[2] = 0x0;
-	  Mymessage.message[3] = 0x1;
-	  Mymessage.message[4] = 0x0;
-	  Mymessage.message[5] = 0x1;
-	  Mymessage.message[6] = 0x0;
-	  Mymessage.message[7] = 0x1;
+	  struct message Mymessage = {
+		  0x1,	// Priority
+		  0x3,	// Destination ID
+		  0x42,	// Command
+		  0x5,	// Argument
+		  {0x1,0x2,0x3,0x4,0x5,0x6}	// Data
+	  };
 	  CAN_transmit_message(&hcan1, Mymessage);
 	  HAL_Delay(500);
     /* USER CODE END WHILE */
