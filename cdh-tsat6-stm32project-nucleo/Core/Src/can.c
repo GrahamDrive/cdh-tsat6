@@ -69,7 +69,7 @@ void CAN_transmit_message(CAN_HandleTypeDef *hcan1, struct message myMessage)
 {
 	// TX Message Parameters
 	uint16_t ID = (myMessage.priority << 4) | (SourceID << 2) | (myMessage.DestinationID);
-	uint8_t message[8] = {myMessage.command, myMessage.argument, myMessage.data[0], myMessage.data[2], myMessage.data[3], myMessage.data[4], myMessage.data[5], myMessage.data[6]};
+	uint8_t message[8] = {myMessage.command, myMessage.data[0], myMessage.data[1], myMessage.data[2], myMessage.data[3], myMessage.data[4], myMessage.data[5],myMessage.data[6]};
 
 	TxMessage.StdId = ID;
 	TxMessage.IDE = CAN_ID_STD;
