@@ -112,7 +112,6 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
-  rx_queue = xQueueCreate(64, 10);
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
@@ -132,13 +131,14 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  struct message Mymessage = {
-		  0x1,	// Priority
-		  0x3,	// Destination ID
-		  0x42,	// Command
-		  {0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7}	// Data
-	  };
-	  CAN_transmit_message(&hcan1, Mymessage);
+	  CANMessage_t myMessage;
+	  myMessage.DestinationID = 0x3;
+	  myMessage.priority = 0x1;
+	  myMessage.command = 0x4;
+	  for(uint8_t i =0; i >= 7; i++){
+		  myMessage.data[i] = i;
+	  }
+	  CAN_transmit_message(&hcan1, myMessage);
 	  HAL_Delay(500);
     /* USER CODE END WHILE */
 

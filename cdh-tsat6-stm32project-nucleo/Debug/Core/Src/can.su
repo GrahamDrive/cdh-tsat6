@@ -1,3 +1,3 @@
-../Core/Src/can.c:43:6:boot_CAN	56	static
-../Core/Src/can.c:68:6:CAN_transmit_message	40	static
-../Core/Src/can.c:81:6:CAN_MESSAGE_RECEIVED	16	static
+../Core/Src/can.c:45:6:boot_CAN	56	static
+../Core/Src/can.c:70:6:CAN_transmit_message	40	static
+../Core/Src/can.c:83:6:CAN_MESSAGE_RECEIVED	16	static

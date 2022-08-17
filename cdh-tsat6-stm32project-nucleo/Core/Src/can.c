@@ -17,7 +17,7 @@
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
-// INCLUDES
+// INCLUDES and Constants
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include <stdio.h>
 
@@ -30,11 +30,13 @@ const uint16_t receivedPriorityMask = 0x7F0;
 const uint8_t SourceID = 0x3; // The ID number of the device MAX VALUE: 0x3
 uint8_t receivedPriority;
 uint8_t receivedSourceId;
-uint8_t receivedDestinationId;
+uint8_t receivedDestinationId; // Re
 CAN_TxHeaderTypeDef TxMessage;
-CAN_RxHeaderTypeDef RxMessage;
-uint32_t            TxMailbox;
-uint8_t             RxData[8];
+CAN_RxHeaderTypeDef RxMessage; // Received Message Header
+uint32_t            TxMailbox; // Transmit Mailbox
+uint8_t             RxData[8]; // Received data
+
+
 /**
  * @brief Boots the CAN Bus
  * 
@@ -65,7 +67,7 @@ void boot_CAN(CAN_HandleTypeDef *hcan1){
  * @param hcan1 The CANBUS object to send the message over\
  * @param message A 8 byte message
  */
-void CAN_transmit_message(CAN_HandleTypeDef *hcan1, struct message myMessage)
+void CAN_transmit_message(CAN_HandleTypeDef *hcan1, CANMessage_t myMessage)
 {
 	// TX Message Parameters
 	uint16_t ID = (myMessage.priority << 4) | (SourceID << 2) | (myMessage.DestinationID);
