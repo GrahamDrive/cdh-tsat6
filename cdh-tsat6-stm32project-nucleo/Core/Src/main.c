@@ -46,7 +46,6 @@ UART_HandleTypeDef huart2;
 
 osThreadId defaultTaskHandle;
 /* USER CODE BEGIN PV */
-uint8_t             TxData[8];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -112,6 +111,7 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
+  //xQueueCreate( QueueLength, sizeof( struct CANMessage_t * ) );
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */

@@ -20,14 +20,16 @@
 // INCLUDES and Constants
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include <stdio.h>
-
 #include "can.h"
+
 
 const uint8_t MAX_CAN_DATA_LENGTH = 8;
 const uint8_t receivedDestinationIdMask = 0x3;
 const uint8_t receivedSourceIdMask = 0xC;
 const uint16_t receivedPriorityMask = 0x7F0;
 const uint8_t SourceID = 0x3; // The ID number of the device MAX VALUE: 0x3
+
+static portBASE_TYPE xHigherPriorityTaskWoken;
 uint8_t receivedPriority;
 uint8_t receivedSourceId;
 uint8_t receivedDestinationId; // Re
@@ -35,8 +37,9 @@ CAN_TxHeaderTypeDef TxMessage;
 CAN_RxHeaderTypeDef RxMessage; // Received Message Header
 uint32_t            TxMailbox; // Transmit Mailbox
 uint8_t             RxData[8]; // Received data
-
-
+const unsigned long QueueLength = 64;
+const unsigned long ItemSize = sizeof( struct CANMessage_t * );
+QueueHandle_t can_rx_queue;
 /**
  * @brief Boots the CAN Bus
  * 
@@ -59,6 +62,7 @@ void boot_CAN(CAN_HandleTypeDef *hcan1){
 	HAL_CAN_Start(hcan1); // Turn on CANBus
 
 	HAL_CAN_ActivateNotification(hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
+	can_rx_queue = xQueueCreate( QueueLength, ItemSize);
 }
 
 
@@ -85,10 +89,8 @@ void CAN_MESSAGE_RECEIVED(CAN_HandleTypeDef *hcan1){
 	HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &RxMessage, RxData);
 	receivedDestinationId = receivedDestinationIdMask & RxMessage.StdId;
 	if(receivedDestinationId == SourceID){
-		receivedSourceId = receivedSourceIdMask & RxMessage.StdId;
-		receivedPriority = receivedPriorityMask & RxMessage.StdId;
 		// Either send to OS Queue or Handle
+		// Below is the CDH solution
+		xQueueSendToBackFromISR(can_rx_queue, &RxMessage, &xHigherPriorityTaskWoken);
 	}
 }
-
-
