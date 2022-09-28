@@ -25,9 +25,9 @@
 
 const uint8_t MAX_CAN_DATA_LENGTH = 8;
 const uint8_t receivedDestinationIdMask = 0x3;
+const uint8_t SourceID = 0x3; // The ID number of the device MAX VALUE: 0x3
 const uint8_t receivedSourceIdMask = 0xC;
 const uint16_t receivedPriorityMask = 0x7F0;
-const uint8_t SourceID = 0x3; // The ID number of the device MAX VALUE: 0x3
 
 static portBASE_TYPE xHigherPriorityTaskWoken;
 uint8_t receivedPriority;
@@ -85,12 +85,21 @@ void CAN_transmit_message(CAN_HandleTypeDef *hcan1, CANMessage_t myMessage)
 }
 
 void CAN_MESSAGE_RECEIVED(CAN_HandleTypeDef *hcan1){
+
+	// Message Sent To Queue
+	CANMessage_t queueMessage;
 	/* Get RX message */
 	HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &RxMessage, RxData);
 	receivedDestinationId = receivedDestinationIdMask & RxMessage.StdId;
 	if(receivedDestinationId == SourceID){
 		// Either send to OS Queue or Handle
 		// Below is the CDH solution
-		xQueueSendToBackFromISR(can_rx_queue, &RxMessage, &xHigherPriorityTaskWoken);
+		queueMessage.priority = receivedPriorityMask & RxMessage.StdId;
+		queueMessage.command = RxData[0];
+		queueMessage.DestinationID = receivedDestinationIdMask & RxMessage.StdId;
+		for(uint8_t i = 1; i < 7; i++){
+			queueMessage.data[i-1] = RxData[i];
+		}
+		xQueueSendToBackFromISR(can_rx_queue, &queueMessage, &xHigherPriorityTaskWoken);
 	}
 }

@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "can.h"
+#include "command_handler.c"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -40,7 +41,7 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
- CAN_HandleTypeDef hcan1;
+CAN_HandleTypeDef hcan1;
 
 UART_HandleTypeDef huart2;
 
@@ -131,15 +132,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  CANMessage_t myMessage;
-	  myMessage.DestinationID = 0x3;
-	  myMessage.priority = 0x1;
-	  myMessage.command = 0x4;
-	  for(uint8_t i =0; i >= 7; i++){
-		  myMessage.data[i] = i;
-	  }
-	  CAN_transmit_message(&hcan1, myMessage);
-	  HAL_Delay(500);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
