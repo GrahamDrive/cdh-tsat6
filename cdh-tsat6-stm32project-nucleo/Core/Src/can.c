@@ -90,9 +90,9 @@ void CAN_MESSAGE_RECEIVED(CAN_HandleTypeDef *hcan1){
 		// Either send to OS Queue or Handle
 		// Below is the CDH solution
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
-		HAL_Delay(100);
+		HAL_Delay(500);
 		// LED OFF
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-		HAL_Delay(100);
+		HAL_Delay(500);
 	}
 }
