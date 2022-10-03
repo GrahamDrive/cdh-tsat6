@@ -26,13 +26,10 @@
 const uint8_t MAX_CAN_DATA_LENGTH = 8;
 const uint8_t receivedDestinationIdMask = 0x3;
 const uint8_t SourceID = 0x3; // The ID number of the device MAX VALUE: 0x3
-const uint8_t receivedSourceIdMask = 0xC;
 const uint16_t receivedPriorityMask = 0x7F0;
 
 static portBASE_TYPE xHigherPriorityTaskWoken;
-uint8_t receivedPriority;
-uint8_t receivedSourceId;
-uint8_t receivedDestinationId; // Re
+uint8_t receivedDestinationId; // ID of Received Message
 CAN_TxHeaderTypeDef TxMessage;
 CAN_RxHeaderTypeDef RxMessage; // Received Message Header
 uint32_t            TxMailbox; // Transmit Mailbox
