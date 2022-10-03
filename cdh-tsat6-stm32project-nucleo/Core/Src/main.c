@@ -23,7 +23,6 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "can.h"
-#include "command_handler.c"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

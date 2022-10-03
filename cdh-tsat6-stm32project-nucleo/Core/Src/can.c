@@ -28,7 +28,6 @@ const uint8_t receivedDestinationIdMask = 0x3;
 const uint8_t SourceID = 0x3; // The ID number of the device MAX VALUE: 0x3
 const uint16_t receivedPriorityMask = 0x7F0;
 
-static portBASE_TYPE xHigherPriorityTaskWoken;
 uint8_t receivedDestinationId; // ID of Received Message
 CAN_TxHeaderTypeDef TxMessage;
 CAN_RxHeaderTypeDef RxMessage; // Received Message Header
@@ -84,19 +83,16 @@ void CAN_transmit_message(CAN_HandleTypeDef *hcan1, CANMessage_t myMessage)
 void CAN_MESSAGE_RECEIVED(CAN_HandleTypeDef *hcan1){
 
 	// Message Sent To Queue
-	CANMessage_t queueMessage;
 	/* Get RX message */
 	HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &RxMessage, RxData);
 	receivedDestinationId = receivedDestinationIdMask & RxMessage.StdId;
 	if(receivedDestinationId == SourceID){
 		// Either send to OS Queue or Handle
 		// Below is the CDH solution
-		queueMessage.priority = receivedPriorityMask & RxMessage.StdId;
-		queueMessage.command = RxData[0];
-		queueMessage.DestinationID = receivedDestinationIdMask & RxMessage.StdId;
-		for(uint8_t i = 1; i < 7; i++){
-			queueMessage.data[i-1] = RxData[i];
-		}
-		xQueueSendToBackFromISR(can_rx_queue, &queueMessage, &xHigherPriorityTaskWoken);
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+		HAL_Delay(100);
+		// LED OFF
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+		HAL_Delay(100);
 	}
 }
