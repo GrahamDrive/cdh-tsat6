@@ -1,0 +1,2 @@
+../Core/Src/can_command_handler.c:6:6:commandHandlerInit	16	static
+../Core/Src/can_command_handler.c:16:6:commandProccesor	32	static
