@@ -44,7 +44,7 @@ struct message{
 void boot_CAN(CAN_HandleTypeDef *hcan1); // Initializes and Starts the CAN
 
 
-void CAN_transmit_message(
+void CAN_Transmit_Message(
 		CAN_HandleTypeDef *hcan1, // CAN object
 		struct message myMessage
 );

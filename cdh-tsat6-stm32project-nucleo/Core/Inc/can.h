@@ -36,14 +36,14 @@ typedef struct{
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-void boot_CAN(CAN_HandleTypeDef *hcan1); // Initializes and Starts the CAN
+void Boot_CAN(CAN_HandleTypeDef *hcan1); // Initializes and Starts the CAN
 
 
-void CAN_transmit_message(
+void CAN_Transmit_Message(
 		CAN_HandleTypeDef *hcan1, // CAN object
 		CANMessage_t myMessage
 );
 
 
-void CAN_MESSAGE_RECEIVED(CAN_HandleTypeDef *hcan1);    // Interrupt handler for CAN BUS
+void CAN_Message_Received(CAN_HandleTypeDef *hcan1);    // Interrupt handler for CAN BUS
 #endif /* INCLUDE_CAN_H_ */

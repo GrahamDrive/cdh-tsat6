@@ -185,7 +185,7 @@ static void MX_CAN1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN CAN1_Init 2 */
-  BOOT_CAN(&hcan1);
+  Boot_CAN(&hcan1);
   /* USER CODE END CAN1_Init 2 */
 
 }
@@ -261,7 +261,7 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
-	CAN_MESSAGE_RECEIVED(hcan);
+	CAN_Message_Received(hcan);
 }
 /* USER CODE END 4 */
 

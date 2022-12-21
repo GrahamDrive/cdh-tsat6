@@ -24,10 +24,10 @@
 #include "can.h"
 
 const uint8_t MAX_CAN_DATA_LENGTH = 8;
-const uint8_t receivedDestinationIdMask = 0x3;
+const uint8_t RECEIVED_DESTINATION_ID_MASK = 0x3;
 const uint8_t receivedSourceIdMask = 0xC;
 const uint16_t receivedPriorityMask = 0x7F0;
-const uint8_t SourceID = 0x3; // The ID number of the device MAX VALUE: 0x3
+const uint8_t SOURCE_ID = 0x3; // The ID number of the device MAX VALUE: 0x3
 uint8_t receivedPriority;
 uint8_t receivedSourceId;
 uint8_t receivedDestinationId;
@@ -65,10 +65,10 @@ void boot_CAN(CAN_HandleTypeDef *hcan1){
  * @param hcan1 The CANBUS object to send the message over\
  * @param message A 8 byte message
  */
-void CAN_transmit_message(CAN_HandleTypeDef *hcan1, struct message myMessage)
+void CAN_Transmit_Message(CAN_HandleTypeDef *hcan1, struct message myMessage)
 {
 	// TX Message Parameters
-	uint16_t ID = (myMessage.priority << 4) | (SourceID << 2) | (myMessage.DestinationID);
+	uint16_t ID = (myMessage.priority << 4) | (SOURCE_ID << 2) | (myMessage.DestinationID);
 	uint8_t message[8] = {myMessage.command, myMessage.argument, myMessage.data[0], myMessage.data[2], myMessage.data[3], myMessage.data[4], myMessage.data[5], myMessage.data[6]};
 
 	TxMessage.StdId = ID;
@@ -81,8 +81,8 @@ void CAN_transmit_message(CAN_HandleTypeDef *hcan1, struct message myMessage)
 void CAN_MESSAGE_RECEIVED(CAN_HandleTypeDef *hcan1){
 	/* Get RX message */
 	HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &RxMessage, RxData);
-	receivedDestinationId = receivedDestinationIdMask & RxMessage.StdId;
-	if(receivedDestinationId == SourceID){
+	receivedDestinationId = RECEIVED_DESTINATION_ID_MASK & RxMessage.StdId;
+	if(receivedDestinationId == SOURCE_ID){
 		receivedSourceId = receivedSourceIdMask & RxMessage.StdId;
 		receivedPriority = receivedPriorityMask & RxMessage.StdId;
 		// Either send to OS queue or handle

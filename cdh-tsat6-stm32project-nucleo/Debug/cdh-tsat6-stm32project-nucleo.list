@@ -27,23 +27,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 00000030  00000000  00000000  0002000c  2**0
                   CONTENTS, READONLY
- 12 .debug_info   00012a43  00000000  00000000  0002003c  2**0
+ 12 .debug_info   00012a30  00000000  00000000  0002003c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 000023ce  00000000  00000000  00032a7f  2**0
+ 13 .debug_abbrev 000023a1  00000000  00000000  00032a6c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_aranges 00000fc0  00000000  00000000  00034e50  2**3
+ 14 .debug_aranges 00000fc0  00000000  00000000  00034e10  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_ranges 00000ee8  00000000  00000000  00035e10  2**3
+ 15 .debug_ranges 00000ee8  00000000  00000000  00035dd0  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  0002394d  00000000  00000000  00036cf8  2**0
+ 16 .debug_macro  0002394d  00000000  00000000  00036cb8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   00011d8f  00000000  00000000  0005a645  2**0
+ 17 .debug_line   00011da1  00000000  00000000  0005a605  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    000dc287  00000000  00000000  0006c3d4  2**0
+ 18 .debug_str    000dc2a9  00000000  00000000  0006c3a6  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000050  00000000  00000000  0014865b  2**0
+ 19 .comment      00000050  00000000  00000000  0014864f  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00004278  00000000  00000000  001486ac  2**2
+ 20 .debug_frame  00004278  00000000  00000000  001486a0  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -350,13 +350,13 @@ Disassembly of section .text:
  80004d4:	4770      	bx	lr
  80004d6:	bf00      	nop
 
-080004d8 <BOOT_CAN>:
+080004d8 <Boot_CAN>:
 /**
  * @brief Boots the CAN Bus
  * 
  * @return HAL_StatusTypeDef 
  */
-void BOOT_CAN(CAN_HandleTypeDef *hcan1){
+void Boot_CAN(CAN_HandleTypeDef *hcan1){
  80004d8:	b580      	push	{r7, lr}
  80004da:	b08c      	sub	sp, #48	; 0x30
  80004dc:	af00      	add	r7, sp, #0
@@ -412,39 +412,39 @@ void BOOT_CAN(CAN_HandleTypeDef *hcan1){
  8000526:	46bd      	mov	sp, r7
  8000528:	bd80      	pop	{r7, pc}
 
-0800052a <CAN_MESSAGE_RECEIVED>:
-	TxMessage.RTR = CAN_RTR_DATA;
-	TxMessage.DLC = MAX_CAN_DATA_LENGTH;
-	HAL_CAN_AddTxMessage(hcan1,&TxMessage,message,&TxMailbox);
+0800052a <CAN_Message_Received>:
+	txMessage.RTR = CAN_RTR_DATA;
+	txMessage.DLC = MAX_CAN_DATA_LENGTH;
+	HAL_CAN_AddTxMessage(hcan1,&txMessage,message,&txMailbox);
 }
 
-void CAN_MESSAGE_RECEIVED(CAN_HandleTypeDef *hcan1){	
+void CAN_Message_Received(CAN_HandleTypeDef *hcan1){
  800052a:	b580      	push	{r7, lr}
  800052c:	b08c      	sub	sp, #48	; 0x30
  800052e:	af00      	add	r7, sp, #0
  8000530:	6078      	str	r0, [r7, #4]
-	uint8_t RxData[8]; // Received data
+	uint8_t rxData[8]; // Received data
 	uint8_t receivedDestinationId; // ID of Received Message
 
 	// Message Sent To Queue
 	/* Get RX message */
-	HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &RxMessage, RxData);
+	HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &rxMessage, rxData);
  8000532:	f107 0308 	add.w	r3, r7, #8
  8000536:	f107 0210 	add.w	r2, r7, #16
  800053a:	2100      	movs	r1, #0
  800053c:	6878      	ldr	r0, [r7, #4]
  800053e:	f000 fd78 	bl	8001032 <HAL_CAN_GetRxMessage>
-	receivedDestinationId = receivedDestinationIdMask & RxMessage.StdId;
+	receivedDestinationId = RECEIVED_DESTINATION_ID_MASK & rxMessage.StdId;
  8000542:	693b      	ldr	r3, [r7, #16]
  8000544:	b2db      	uxtb	r3, r3
  8000546:	2203      	movs	r2, #3
  8000548:	4013      	ands	r3, r2
  800054a:	f887 302f 	strb.w	r3, [r7, #47]	; 0x2f
-	if(receivedDestinationId == SourceID){
+	if(receivedDestinationId == SOURCE_ID){
  800054e:	2203      	movs	r2, #3
  8000550:	f897 302f 	ldrb.w	r3, [r7, #47]	; 0x2f
  8000554:	4293      	cmp	r3, r2
- 8000556:	d113      	bne.n	8000580 <CAN_MESSAGE_RECEIVED+0x56>
+ 8000556:	d113      	bne.n	8000580 <CAN_Message_Received+0x56>
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
  8000558:	2201      	movs	r2, #1
  800055a:	2120      	movs	r1, #32
@@ -704,9 +704,9 @@ static void MX_CAN1_Init(void)
  80006a0:	f000 f8be 	bl	8000820 <Error_Handler>
   }
   /* USER CODE BEGIN CAN1_Init 2 */
-  BOOT_CAN(&hcan1);
+  Boot_CAN(&hcan1);
  80006a4:	4802      	ldr	r0, [pc, #8]	; (80006b0 <MX_CAN1_Init+0x6c>)
- 80006a6:	f7ff ff17 	bl	80004d8 <BOOT_CAN>
+ 80006a6:	f7ff ff17 	bl	80004d8 <Boot_CAN>
   /* USER CODE END CAN1_Init 2 */
 
 }
@@ -915,9 +915,9 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
  80007e6:	b082      	sub	sp, #8
  80007e8:	af00      	add	r7, sp, #0
  80007ea:	6078      	str	r0, [r7, #4]
-	CAN_MESSAGE_RECEIVED(hcan);
+	CAN_Message_Received(hcan);
  80007ec:	6878      	ldr	r0, [r7, #4]
- 80007ee:	f7ff fe9c 	bl	800052a <CAN_MESSAGE_RECEIVED>
+ 80007ee:	f7ff fe9c 	bl	800052a <CAN_Message_Received>
 }
  80007f2:	bf00      	nop
  80007f4:	3708      	adds	r7, #8
