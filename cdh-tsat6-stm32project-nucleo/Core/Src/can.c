@@ -26,12 +26,13 @@
 const uint8_t MAX_CAN_DATA_LENGTH = 8;
 const uint8_t RECEIVED_DESTINATION_ID_MASK = 0x3;
 const uint8_t SOURCE_ID = 0x3; // The ID number of the device MAX VALUE: 0x3
+
 /**
  * @brief Boots the CAN Bus
  * 
  * @return HAL_StatusTypeDef 
  */
-void Boot_CAN(CAN_HandleTypeDef *hcan1){
+void Boot_CAN(){
 	CAN_FilterTypeDef  		sFilterConfig;
 	sFilterConfig.FilterIdHigh = 0x0000;
 	sFilterConfig.FilterIdLow = 0x0000;
@@ -44,19 +45,18 @@ void Boot_CAN(CAN_HandleTypeDef *hcan1){
 	sFilterConfig.FilterActivation = ENABLE;
 	sFilterConfig.SlaveStartFilterBank = 14;
 
-	HAL_CAN_ConfigFilter(hcan1, &sFilterConfig);
-	HAL_CAN_Start(hcan1); // Turn on CANBus
+	HAL_CAN_ConfigFilter(&hcan1, &sFilterConfig);
+	HAL_CAN_Start(&hcan1); // Turn on CANBus
 
-	HAL_CAN_ActivateNotification(hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
+	HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
 }
 
 
 /**
  * @brief Used to send messages over CAN
- * @param hcan1 The CANBUS object to send the message over\
  * @param message A 8 byte message
  */
-void CAN_Transmit_Message(CAN_HandleTypeDef *hcan1, CANMessage_t myMessage){
+void CAN_Transmit_Message(CANMessage_t myMessage){
 	uint32_t txMailbox; // Transmit Mailbox
 	CAN_TxHeaderTypeDef txMessage;
 	
@@ -68,23 +68,31 @@ void CAN_Transmit_Message(CAN_HandleTypeDef *hcan1, CANMessage_t myMessage){
 	txMessage.IDE = CAN_ID_STD;
 	txMessage.RTR = CAN_RTR_DATA;
 	txMessage.DLC = MAX_CAN_DATA_LENGTH;
-	HAL_CAN_AddTxMessage(hcan1,&txMessage,message,&txMailbox);
+	HAL_CAN_AddTxMessage(&hcan1, &txMessage, message, &txMailbox);
 }
 
-void CAN_Message_Received(CAN_HandleTypeDef *hcan1){
+
+/**
+ * @brief Interrupt Handler for received CAN messages.
+ */
+void CAN_Message_Received(){
 	CAN_RxHeaderTypeDef rxMessage; // Received Message Header
 	uint8_t rxData[8]; // Received data
 	uint8_t receivedDestinationId; // ID of Received Message
 
 	// Message Sent To Queue
 	/* Get RX message */
-	HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &rxMessage, rxData);
+	HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &rxMessage, rxData);
 	receivedDestinationId = RECEIVED_DESTINATION_ID_MASK & rxMessage.StdId;
 	if(receivedDestinationId == SOURCE_ID){
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
-		HAL_Delay(500);
-		// LED OFF
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-		HAL_Delay(500);
+		HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+		CANMessage_t ping;
+		ping.DestinationID = 0x7F;
+		ping.command = rxData[0];
+		ping.priority = 1;
+		for(uint8_t i = 0; i >= 7; i++){
+			ping.data[i] = rxData[i+1];
+		}
+		CAN_Transmit_Message(ping);
 	}
 }

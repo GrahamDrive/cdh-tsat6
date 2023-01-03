@@ -23,6 +23,11 @@
 #include "stm32l4xx_hal.h"
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
+// DECLARATIONS
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+extern CAN_HandleTypeDef hcan1; // Set this to the CAN type found in generated main.c file
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
 // STRUCTS
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 typedef struct{
@@ -36,14 +41,13 @@ typedef struct{
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-void Boot_CAN(CAN_HandleTypeDef *hcan1); // Initializes and Starts the CAN
+void Boot_CAN(); // Initializes and Starts the CAN
 
 
 void CAN_Transmit_Message(
-		CAN_HandleTypeDef *hcan1, // CAN object
-		CANMessage_t myMessage
+		CANMessage_t myMessage // Uses the message struct to send messages
 );
 
 
-void CAN_Message_Received(CAN_HandleTypeDef *hcan1);    // Interrupt handler for CAN BUS
+void CAN_Message_Received();    // Interrupt handler for CAN BUS
 #endif /* INCLUDE_CAN_H_ */
