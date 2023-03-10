@@ -91,12 +91,21 @@ int main(void)
   MX_USART2_UART_Init();
   MX_CAN1_Init();
   /* USER CODE BEGIN 2 */
+  	  CANMessage_t testMessage;
+  	  testMessage.DestinationID = 0x3;
+  	  testMessage.command = 0x1;
+  	  for(uint8_t index = 0; index >= 7; index++){
+  		  testMessage.data[index] = index;
+  	  }
+  	  testMessage.priority = 0x1;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  CAN_Transmit_Message(testMessage);
+	  HAL_Delay(500);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -170,7 +179,7 @@ static void MX_CAN1_Init(void)
   /* USER CODE END CAN1_Init 1 */
   hcan1.Instance = CAN1;
   hcan1.Init.Prescaler = 16;
-  hcan1.Init.Mode = CAN_MODE_NORMAL;
+  hcan1.Init.Mode = CAN_MODE_LOOPBACK;
   hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
   hcan1.Init.TimeSeg1 = CAN_BS1_5TQ;
   hcan1.Init.TimeSeg2 = CAN_BS2_4TQ;

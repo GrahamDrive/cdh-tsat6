@@ -106,14 +106,6 @@ int main(void)
   MX_SPI3_Init();
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
-  	  	TxData[0] = 0x4;
-  	    TxData[1] = 0x2;
-  	    TxData[2] = 0x0;
-  	    TxData[3] = 0x0;
-  	    TxData[4] = 0x0;
-  	    TxData[5] = 0x0;
-  	    TxData[6] = 0x2;
-  	    TxData[7] = 0x4;
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -227,7 +219,7 @@ static void MX_CAN1_Init(void)
   /* USER CODE END CAN1_Init 1 */
   hcan1.Instance = CAN1;
   hcan1.Init.Prescaler = 16;
-  hcan1.Init.Mode = CAN_MODE_NORMAL;
+  hcan1.Init.Mode = CAN_MODE_LOOPBACK;
   hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
   hcan1.Init.TimeSeg1 = CAN_BS1_5TQ;
   hcan1.Init.TimeSeg2 = CAN_BS2_4TQ;
@@ -242,7 +234,7 @@ static void MX_CAN1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN CAN1_Init 2 */
-  boot_CAN(&hcan1);
+  CAN_Boot();
   /* USER CODE END CAN1_Init 2 */
 
 }
@@ -457,10 +449,9 @@ static void MX_GPIO_Init(void)
   *         the configuration information for the specified CAN.
   * @retval None
   */
-void HAL_CAN_RxFIFO0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
-  // Handling Function
-  CAN_MESSAGE_RECEIVED(hcan1);
+	CAN_Message_Received();
 }
 /* USER CODE END 4 */
 
@@ -474,10 +465,19 @@ void HAL_CAN_RxFIFO0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
 void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN 5 */
+	CANMessage_t static testMessage;
+	testMessage.DestinationID = 0x3;
+	testMessage.command = 0x1;
+	for(uint8_t index = 0; index >= 7; index++){
+		testMessage.data[index] = index;
+	}
+	testMessage.priority = 0x1;
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+	  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9); // flash led
+	  CAN_Transmit_Message(testMessage);
+	  osDelay(500);
   }
   /* USER CODE END 5 */
 }

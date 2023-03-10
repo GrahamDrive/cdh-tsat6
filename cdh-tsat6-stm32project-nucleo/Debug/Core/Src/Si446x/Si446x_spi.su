@@ -1,0 +1,5 @@
+../Core/Src/Si446x/Si446x_spi.c:26:6:spi_init	4	static
+../Core/Src/Si446x/Si446x_spi.c:31:9:cselect	4	static
+../Core/Src/Si446x/Si446x_spi.c:37:9:cdeselect	4	static
+../Core/Src/Si446x/Si446x_spi.c:43:9:spi_transfer	16	static
+../Core/Src/Si446x/Si446x_spi.c:53:6:spi_transfer_nr	16	static

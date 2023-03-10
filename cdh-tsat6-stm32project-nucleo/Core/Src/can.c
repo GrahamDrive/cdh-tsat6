@@ -85,7 +85,6 @@ void CAN_Message_Received(){
 	HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &rxMessage, rxData);
 	receivedDestinationId = RECEIVED_DESTINATION_ID_MASK & rxMessage.StdId;
 	if(receivedDestinationId == SOURCE_ID){
-		HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
 		CANMessage_t ping;
 		ping.DestinationID = 0x7F;
 		ping.command = rxData[0];

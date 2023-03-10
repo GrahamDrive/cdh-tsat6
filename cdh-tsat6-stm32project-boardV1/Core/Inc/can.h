@@ -23,32 +23,31 @@
 #include "stm32l4xx_hal.h"
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
-// DEFINITIONS AND MACROS
+// DECLARATIONS
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
+extern CAN_HandleTypeDef hcan1; // Set this to the CAN type found in generated main.c file
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 // STRUCTS
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
-struct message{
+typedef struct{
 	uint8_t priority; // Priority of the message MAX VALUE: 0x1F
 	uint8_t DestinationID; // The ID number of the destination device MAX VALUE: 0x3
 	uint8_t command;	// The command value
-	uint8_t argument;	// Can either be a seventh message byte or a command argument
-	uint8_t data[6];	// Message
-};
+	uint8_t data[7];	// Message
+} CANMessage_t;
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 // FUNCTION PROTOTYPES
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-void boot_CAN(CAN_HandleTypeDef *hcan1); // Initializes and Starts the CAN
+void CAN_Boot(); // Initializes and Starts the CAN
 
 
 void CAN_Transmit_Message(
-		CAN_HandleTypeDef *hcan1, // CAN object
-		struct message myMessage
+		CANMessage_t myMessage // Uses the message struct to send messages
 );
 
 
-void CAN_MESSAGE_RECEIVED(CAN_HandleTypeDef *hcan1);    // Interrupt handler for CAN BUS
+void CAN_Message_Received();    // Interrupt handler for CAN BUS
 #endif /* INCLUDE_CAN_H_ */

@@ -64,8 +64,8 @@ all: main-build
 main-build: cdh-tsat6-stm32project-boardV1.elf secondary-outputs
 
 # Tool invocations
-cdh-tsat6-stm32project-boardV1.elf cdh-tsat6-stm32project-boardV1.map: $(OBJS) $(USER_OBJS) F:\Documents\GitHub\cdh-tsat6\cdh-tsat6-stm32project-boardV1\STM32L452RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "cdh-tsat6-stm32project-boardV1.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"F:\Documents\GitHub\cdh-tsat6\cdh-tsat6-stm32project-boardV1\STM32L452RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="cdh-tsat6-stm32project-boardV1.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+cdh-tsat6-stm32project-boardV1.elf cdh-tsat6-stm32project-boardV1.map: $(OBJS) $(USER_OBJS) C:\Users\ninja\Documents\Github\cdh-tsat6\cdh-tsat6-stm32project-boardV1\STM32L452RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "cdh-tsat6-stm32project-boardV1.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\ninja\Documents\Github\cdh-tsat6\cdh-tsat6-stm32project-boardV1\STM32L452RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="cdh-tsat6-stm32project-boardV1.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
