@@ -85,12 +85,13 @@ void CAN_Message_Received(){
 	HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &rxMessage, rxData);
 	receivedDestinationId = RECEIVED_DESTINATION_ID_MASK & rxMessage.StdId;
 	if(receivedDestinationId == SOURCE_ID){
+		// *NOTE* program custom handling per your subsystem here.
 		CANMessage_t ping;
 		ping.DestinationID = 0x2;
 		ping.command = rxData[0];
 		ping.priority = 1;
-		for(uint8_t i = 0; i >= 7; i++){
-			ping.data[i] = rxData[i+1];
+		for(uint8_t i = 0; i <= 7; i++){
+			ping.data[i] = rxData[i+1] + 1;
 		}
 		CAN_Transmit_Message(ping);
 	}
