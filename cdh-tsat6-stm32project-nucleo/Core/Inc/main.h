@@ -91,10 +91,6 @@ void Error_Handler(void);
 #define CAM_FSH_GPIO_Port GPIOA
 #define CAM_ON_Pin GPIO_PIN_10
 #define CAM_ON_GPIO_Port GPIOA
-#define WDI_Pin GPIO_PIN_11
-#define WDI_GPIO_Port GPIOA
-#define M_nRESET_Pin GPIO_PIN_12
-#define M_nRESET_GPIO_Port GPIOA
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
